@@ -139,7 +139,7 @@ export default function Home() {
           }}
           m="56px 0"
         >
-         {page >= 1 && !loading &&  (
+         {page > 1 && !loading &&  (
             <Button onClick={handlePrevPage}>
               Prev Page
             </Button>

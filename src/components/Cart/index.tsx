@@ -27,7 +27,8 @@ export function Cart() {
         p="0 14px 75px"
         h="505px"
         w="220px"
-        ml="100px"
+        ml={["0", "0", "0px", "100px"]}
+        mt={["20px", "20px", "20px", "0px"]}
         maxWidth="220px"
         alignSelf="center"
         color="blue.500"

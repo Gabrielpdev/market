@@ -6,7 +6,7 @@ export function Header() {
     w='100vw'
     align="center"
     justify="space-between"
-    p='30px 60px'
+    p={['30px 10px', '30px 60px']}
     mb="auto"
   >
     <Text

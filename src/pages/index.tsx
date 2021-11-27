@@ -23,6 +23,7 @@ interface ProductProps {
 }
 
 export default function Home() {
+  const [totalProducts, setTotalProducts] = useState([]);
   const [products, setProducts] = useState<ProductProps[]>([]);
 
   const [loading, setLoading] = useState(true);
@@ -35,10 +36,12 @@ export default function Home() {
 
   function handlePrevPage(){
     setPage(page - 1)
+    setProducts(totalProducts[page - 1])
   }
 
   function handleNextPage(){
     setPage(page + 1)
+    setProducts(totalProducts[page + 1])
   }
 
   const handleSort = useCallback((sort) =>{
@@ -65,16 +68,18 @@ export default function Home() {
 
       fetch(`http://localhost:3000/api/product?${sorting}${rate}`)
       .then(res => res.json())
-      .then(json => {
-        setProducts(json[page - 1])
-        setTotalPage(json.length)
+      .then(products => {
+        setPage(1)
+        setTotalProducts(products)
+        setProducts(products[0])
+        setTotalPage(products.length - 1)
         setLoading(false)
       })
     }catch(e){
       console.log(e)
     }
-  },[page, rating, sort])
-
+  },[rating, sort])
+  
   return (
     <Flex
       align="center"
@@ -100,13 +105,15 @@ export default function Home() {
           mt='44px' 
           align="center"
           justify="space-between"
+          flexDirection={["column", "column", "column", "row"]}
         >
           {!loading ? (
             <Flex  
               mt='44px'
               align="center"
               justify="center"
-              w='700px'
+              w={["100%", "100%", "700px", "700px"]}
+              flexDirection={["column", "column", "row", "row"]}
               css={{
                 'gap': '20px',
               }}
@@ -132,12 +139,12 @@ export default function Home() {
           }}
           m="56px 0"
         >
-         {page > 1 && (
+         {page >= 1 && !loading &&  (
             <Button onClick={handlePrevPage}>
               Prev Page
             </Button>
           )}
-          {page < totalPage && (
+          {page < totalPage && !loading && (
             <Button onClick={handleNextPage}>
               Next Page
             </Button>

@@ -5,8 +5,6 @@ export default async function handler(req, res) {
 
   let {data} = await api.get(`/products`)
 
-  console.log(data);
-
   // I made this config because the API is not returning the correct data
   if(sort === 'desc'){
     data.sort((a, b) => a.price - b.price)

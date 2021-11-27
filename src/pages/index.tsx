@@ -75,8 +75,8 @@ export default function Home() {
         setTotalPage(products.length - 1)
         setLoading(false)
       })
-    }catch(e){
-      console.log(e)
+    }catch(error){
+      console.log(error)
     }
   },[rating, sort])
   

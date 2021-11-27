@@ -7,6 +7,7 @@ export function Header() {
     align="center"
     justify="space-between"
     p='30px 60px'
+    mb="auto"
   >
     <Text
       fontWeight='bold'

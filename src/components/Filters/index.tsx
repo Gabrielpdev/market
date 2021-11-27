@@ -2,6 +2,10 @@ import Select from 'react-select';
 import { Flex } from "@chakra-ui/react";
 import { useState } from 'react';
 
+interface FiltersProps {
+  onSort: (sort: { value: string }) => void;
+}
+
 
 const customRatingSelectStyle = {
   option: (_, state) => ({
@@ -11,6 +15,7 @@ const customRatingSelectStyle = {
     padding: 20,
     fontSize: '12px',
     fontWeight: '400',
+    cursor: 'pointer',
 
     backgroundColor: state.isFocused ? 'transparent' : 'transparent',
     "&:hover": {
@@ -39,6 +44,7 @@ const customRatingSelectStyle = {
     border: '0',
 
     borderRadius: '10px 10px 10px 10px',
+    cursor: 'pointer',
     
     textAlign: 'left',
     fontSize: '18px',
@@ -84,6 +90,7 @@ const customSortSelectStyle = {
     padding: 20,
     fontSize: '12px',
     fontWeight: '400',
+    cursor: 'pointer',
 
     backgroundColor: state.isFocused ? 'transparent' : 'transparent',
     "&:hover": {
@@ -107,6 +114,7 @@ const customSortSelectStyle = {
     display: 'flex',
     alginItems: 'center',
     width: '117px',
+    cursor: 'pointer',
 
     backgroundColor: state.isFocused ? '#230F5B' : '#230F5B',
     border: '0',
@@ -146,6 +154,7 @@ const customSortSelectStyle = {
     
     boxShadow: 'none',
     backgroundColor: state.isFocused ? '#230F5B' : '#230F5B',
+    cursor: 'pointer',
   }),
 } as any;
 
@@ -156,15 +165,15 @@ const optionsRating = [
   { label: '+ 4 stars', value: '4' },
   { label: '5 stars', value: '5' },
 ]
-const optionsSort = [
-  { label: 'Highest price', value: 'highest' },
-  { label: 'Lowest price', value: 'lowest' },
+const optionsSort = [ 
+  { label: 'Highest price', value: 'asc' },
+  { label: 'Lowest price', value: 'desc' },
 ]
 
-export function Filters() {
+export function Filters(props: FiltersProps) {
   const [ selectedOption1, setSelectedOption1] = useState(null);
   const [ selectedOption2, setSelectedOption2] = useState(null);
-
+  
   return (
     <Flex
       w='312px'
@@ -173,23 +182,26 @@ export function Filters() {
       mt='17px'
     >
       <Select
-       options={optionsRating}
-       value={selectedOption1}
-       onChange={(option) => {
-         setSelectedOption1(option);
-       }}
-       styles={customRatingSelectStyle}
-       placeholder="Filter by rating"
+        instanceId="rating"
+        options={optionsRating}
+        value={selectedOption1}
+        onChange={(option) => {
+          setSelectedOption1(option);
+        }}
+        styles={customRatingSelectStyle}
+        placeholder="Filter by rating"
      />
 
       <Select
-       options={optionsSort}
-       value={selectedOption2}
-       onChange={(option) => {
-         setSelectedOption2(option);
-       }}
-       styles={customSortSelectStyle}
-       placeholder="Sort by"
+        instanceId="sort"
+        options={optionsSort}
+        value={selectedOption2}
+        onChange={(option) => {
+          setSelectedOption2(option);
+          props.onSort(option)
+        }}
+        styles={customSortSelectStyle}
+        placeholder="Sort by"
      /> 
     </Flex>
   )

@@ -4,6 +4,9 @@ import { useState } from 'react';
 
 interface FiltersProps {
   onSort: (sort: { value: string }) => void;
+  onRating: (rating: { value: string }) => void;
+  sort: { value: string, label: string };
+  rating: { value: string, label: string };
 }
 
 
@@ -171,8 +174,6 @@ const optionsSort = [
 ]
 
 export function Filters(props: FiltersProps) {
-  const [ selectedOption1, setSelectedOption1] = useState(null);
-  const [ selectedOption2, setSelectedOption2] = useState(null);
   
   return (
     <Flex
@@ -184,9 +185,9 @@ export function Filters(props: FiltersProps) {
       <Select
         instanceId="rating"
         options={optionsRating}
-        value={selectedOption1}
+        value={props.rating}
         onChange={(option) => {
-          setSelectedOption1(option);
+          props.onRating(option);
         }}
         styles={customRatingSelectStyle}
         placeholder="Filter by rating"
@@ -195,9 +196,8 @@ export function Filters(props: FiltersProps) {
       <Select
         instanceId="sort"
         options={optionsSort}
-        value={selectedOption2}
+        value={props.sort}
         onChange={(option) => {
-          setSelectedOption2(option);
           props.onSort(option)
         }}
         styles={customSortSelectStyle}

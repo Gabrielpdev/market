@@ -1,9 +1,24 @@
 import { api } from "../../service/api"
 
 export default async function handler(req, res) {
-  const { sort = 'asc' } = req.query;
+  const { sort = 'asc', rating } = req.query;
 
-  const {data} = await api.get(`/products?sort=${sort}`)
+  let {data} = await api.get(`/products?sort=desc`)
+  console.log(data)
+  // I made this config because the API is not returning the correct data
+  if(sort === 'desc'){
+    data.sort((a, b) => a.price - b.price)
+  }
+
+  if(sort === 'asc'){ 
+    data.sort((a, b) => b.price - a.price)
+  }
+
+  // I made this config because the API is not having this data
+  if(rating){
+    const filteredData = data.filter((item) => rating >= Math.floor(item.rating.rate))
+    data = filteredData
+  }
 
   const splittedData = data.map((item, index) => {
     if(index % 3 === 0 ){

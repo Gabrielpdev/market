@@ -27,6 +27,9 @@ export default function Home() {
 
   const [loading, setLoading] = useState(true);
 
+  const [ rating, setRating] = useState(null);
+  const [ sort, setSort] = useState(null);
+
   const [page, setPage] = useState<number>(1);
   const [totalPage, setTotalPage] = useState<number>(1);
 
@@ -38,19 +41,29 @@ export default function Home() {
     setPage(page + 1)
   }
 
-  const handleSort = useCallback( async (sort: { value: string }) =>{
-    setLoading(true)
+  const handleSort = useCallback((sort) =>{
+    setSort(sort)
+  }, [])
 
-    const { data } = await axios.get(`http://localhost:3000/api/product?sort=${sort.value}`);
-
-    setProducts(data[0])
-    setLoading(false)
+  const handleRating = useCallback((rating) =>{
+    setRating(rating)
   }, [])
 
   useEffect(() => {
     setLoading(true)
+    let rate = ''
+    let sorting = ''
+
     try{
-      fetch(`http://localhost:3000/api/product`)
+      if(rating?.value){
+        rate = `&rating=${rating?.value}`
+      }
+
+      if(sort?.value){
+        sorting = `sort=${sort?.value}`
+      }
+
+      fetch(`http://localhost:3000/api/product?${sorting}${rate}`)
       .then(res => res.json())
       .then(json => {
         setProducts(json[page - 1])
@@ -60,10 +73,7 @@ export default function Home() {
     }catch(e){
       console.log(e)
     }
-  },[page])
-
-  console.log(products)
-  // console.log(totalPage)
+  },[page, rating, sort])
 
   return (
     <Flex
@@ -79,7 +89,12 @@ export default function Home() {
         flexDir="column"
       >
         <Search />
-        <Filters onSort={handleSort} />
+        <Filters
+          sort={sort}
+          rating={rating}
+          onRating={handleRating} 
+          onSort={handleSort}
+        />
 
         <Flex  
           mt='44px' 
@@ -90,7 +105,8 @@ export default function Home() {
             <Flex  
               mt='44px'
               align="center"
-              justify="space-between"
+              justify="center"
+              w='700px'
               css={{
                 'gap': '20px',
               }}

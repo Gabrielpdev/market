@@ -2,6 +2,8 @@ import { useMemo } from 'react';
 import { Box, Button, Flex, Image, Text, Icon } from "@chakra-ui/react";
 import { AiFillStar, AiOutlineStar } from "react-icons/ai";
 
+import { useCart } from '../../context/cart';
+
 interface ProductProps {
   id: number;
   title: string;
@@ -15,6 +17,8 @@ interface ProductProps {
 }
 
 export function Product(product: ProductProps) {
+  const { addNewProduct } = useCart();
+
   const starNumber = useMemo(
     () => Array.from(
       { length: 5 },
@@ -28,6 +32,15 @@ export function Product(product: ProductProps) {
     ),
     [product.rating.rate],
   );
+
+  function handleAddProduct(product: ProductProps) {
+    addNewProduct({
+      id: product.id,
+      name: product.title,
+      price: Number(product.price),
+      quantity: 1,
+    });
+  }
 
   return (
     <Flex
@@ -120,9 +133,14 @@ export function Product(product: ProductProps) {
       </Flex>
 
       <Button
+        onClick={() => handleAddProduct(product)}
         mt="10px"
         bg="blue.500"
         color="white.500"
+        _hover={{
+          background: "blue.500",
+          filter: "brightness(.8)",
+        }}
       >
         Add to Cart
       </Button>

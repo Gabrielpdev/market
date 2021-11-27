@@ -1,7 +1,23 @@
 import { useMemo } from 'react';
-import { Box, Flex, Image, Text, Icon } from "@chakra-ui/react";
+import { Box, Flex, Text, Icon } from "@chakra-ui/react";
+import { BsTrash } from "react-icons/bs";
+
+import { useCart } from '../../context/cart';
 
 export function Cart() {
+  const { removeCart, cart }  = useCart();
+
+
+  function handleRemoveProduct(id: number){
+    removeCart(id);
+  }
+
+  const totalPrice = useMemo(() => {
+    return cart.reduce((acc, item) => {
+      return acc + item.price * item.quantity;
+    }, 0);
+  },[cart])
+
   return (
     <Flex
       position="relative"
@@ -22,49 +38,73 @@ export function Cart() {
         flexDirection="column"
         overflowY="scroll"
       >
-        <Box
-          mt='14px'
-          p="14px"
-          w="100%"
-          maxWidth="220px"
-          color="blue.500"
-          position="relative"
-          bg="white.500"
-          borderRadius="8px"
-          borderColor="blue.500"
-          borderWidth="1px"
-        >
-          <Flex>
-            <Text
-              fontSize="14px"
-              fontWeight='bold'
-            >
-              Name: 
-            </Text>
-            <Text
-              fontSize="14px"
-              ml="5px"
-            >
-              Mens Casual
-            </Text>
-          </Flex>
+        {cart.map(product => (
+          <Box
+            key={product.id}
+            mt='14px'
+            p="14px"
+            w="100%"
+            maxWidth="220px"
+            color="blue.500"
+            position="relative"
+            bg="white.500"
+            borderRadius="8px"
+            borderColor="blue.500"
+            borderWidth="1px"
+            s
+          >
+            <Flex>
+              <Text
+                fontSize="14px"
+                fontWeight='bold'
+              >
+                Name: 
+              </Text>
+              <Text
+                fontSize="14px"
+                ml="5px"
+                w="105px"
+                
+                d='-webkit-box'
+                overflow="hidden"
+                textOverflow="ellipsis"
+                css={{
+                  '-webkit-line-clamp': '1',
+                  '-webkit-box-orient': 'vertical',
+                }}
+              >
+                {product.name}
+              </Text>
+            </Flex>
 
-          <Flex>
-            <Text
-              fontSize="14px"
-              fontWeight='bold'
-            >
-              Quantity: 
-            </Text>
-            <Text
-              fontSize="14px"
-              ml="5px"
-              maxHeight="71px"
-            >
-              2
-            </Text>
-          </Flex>
-        </Box>
+            <Flex>
+              <Text
+                fontSize="14px"
+                fontWeight='bold'
+              >
+                Quantity: 
+              </Text>
+              <Text
+                fontSize="14px"
+                ml="5px"
+                maxHeight="71px"
+              >
+                {product.quantity}
+              </Text>
+            </Flex>
+
+            <Icon
+              position="absolute"
+              right="5px"
+              top="10px"
+              cursor="pointer"
+              onClick={() => handleRemoveProduct(product.id)}
+              as={BsTrash} 
+              fontSize="16" 
+              color="red.500"
+            />
+          </Box>
+        ))}
       </Flex>
 
       <Flex
@@ -74,8 +114,8 @@ export function Cart() {
         h="68px"
         w="220px"
 
-        alignSelf="center"
-        justifyContent="space-between"
+        align="center"
+        justifyContent="center"
         
         color="white.500"
         bg="blue.500"
@@ -87,13 +127,14 @@ export function Cart() {
         right="0"
       >
         <Text
+          textAlign="center"
+          w="100%"
           fontSize="18px"
           fontWeight="bold"
           color="white.500"
         >
-          Total: $ 189172.09
+          {`Total: $ ${totalPrice.toFixed(2)}`}
         </Text>
-      
       </Flex>
     </Flex>
   )
